@@ -32,6 +32,4 @@ db.transaction(trx => {
  
 }
 
-module.exports = {
-handleRegister: handleRegister
-};
+export default registerHandler;
