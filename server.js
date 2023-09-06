@@ -13,36 +13,24 @@ const image = require('./controllers/image');
 const db = knex({
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password : 'test',
-    database : 'smartbrain'
+    host : 'dpg-cjs53clv2qks73dm5t9g-a',
+    user : 'mydb_rdx8_user',
+    password : '4QtgjIZouGa3772fiFGhNXk2guympdVD',
+    database : 'mydb_rdx8kne'
   }
 });
 
-db.select('*').from('users').then(data => {
-  console.log(data);
-});
+
 
 const app = express();
 
-app.use(bodyParser.json());
-const corsOptions = {
-  origin: 'http://localhost:3000', 
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-};
-app.use(cors(corsOptions));
+
+app.use(cors())
+app.use(express.json()); 
 
 
 
-app.get('/', (req, res) => {
-  db.select('*').from('users')
-  .then(users => {
-  res.json(users);
-})
-  .catch(err => res.status(400).json('error getting users'));
-});
+app.get('/', (req, res)=> { res.send(db.users) });
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt)});
 
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt)});
