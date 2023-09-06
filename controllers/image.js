@@ -14,7 +14,7 @@ const handleApiCall = (req, res) => {
 }
 
 
-const handleImage = (req, res, db) => {
+const imageHandler = (req, res, db) => {
   
   const { id, imageUrl } = req.body;
 
