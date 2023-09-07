@@ -11,13 +11,16 @@ import profileHandler from "./controllers/profile.js";
 import imageHandler from "./controllers/image.js";
 
 const db = knex({
-  client: 'pg',
-  connection: {
-    host : 'dpg-cjs53clv2qks73dm5t9g-a',
-    user : 'mydb_rdx8_user',
-    password : '4QtgjIZouGa3772fiFGhNXk2guympdVD',
-    database : 'mydb_rdx8kne'
-  }
+client: 'pg',
+connection: {
+connectionString : process.env.DATABASE_URL,
+ssl: { rejectUnauthorized: false },
+host: process.env.DATABASE_HOST,
+port: 5432,
+user: process.env.DATABASE_USER,
+password: process.env.DATABASE_PW,
+database: process.env.DATABASE_DB
+}
 });
 
 const app = express();
