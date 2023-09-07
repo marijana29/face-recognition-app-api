@@ -20,32 +20,19 @@ const db = knex({
   }
 });
 
-
-
 const app = express();
 
-
-app.use(cors())
-app.use(express.json()); 
-
-
+app.use(cors());
+app.use(express.json());
 
 app.get('/', (req, res)=> { res.send(db.users) });
-app.post('/signin', (req, res) => { signin.signinHandler(req, res, db, bcrypt)});
-
-app.post('/register', (req, res) => { register.registerHandler(req, res, db, bcrypt)});
-
-app.get('/profile/:id', (req, res) => { profile.profileHandler(req, res, db)});
-
-app.put('/image', (req, res) => { image.imageHandler(req, res, db)});
-app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)});
- 
-
-
+app.post('/signin', (req, res) => { signinHandler(req, res, db, bcrypt) });
+app.post('/register', (req, res) => { registerHandler(req, res, db, bcrypt) });
+app.get('/profile/:id', (req, res) => { profileHandler(req, res, db) });
+app.put('/image', (req, res) => { imageHandler(req, res, db) });
+app.post('/imageurl', (req, res) => { imageHandler.handleApiCall(req, res) });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`app is running on port ${PORT}`);
 });
-
-
