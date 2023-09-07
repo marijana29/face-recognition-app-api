@@ -32,7 +32,7 @@ app.get('/', (req, res)=> { res.send(db.users) });
 app.post('/signin', (req, res) => { signinHandler(req, res, db, bcrypt) });
 app.post('/register', (req, res) => { registerHandler(req, res, db, bcrypt) });
 app.get('/profile/:id', (req, res) => { profileHandler(req, res, db) });
-app.put('/image', (req, res) => { imageHandler(req, res, db) });
+app.put('/image', (req, res) => { imageHandler.handleApiCall(req, res, db) });
 app.post('/imageurl', (req, res) => { imageHandler.handleApiCall(req, res) });
 
 const PORT = process.env.PORT || 5000;
