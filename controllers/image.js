@@ -32,4 +32,4 @@ const imageHandler = (req, res, db) => {
     });
 }
 
-export default imageHandler;
+export { imageHandler, handleApiCall };
