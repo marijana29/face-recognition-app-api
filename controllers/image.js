@@ -22,7 +22,7 @@ const handleApiCall = (req, res, db) => {
     });
 };
 
-const imageHandler = (req, res, db) => {
+const imageHandler = (req, res) => {
   const { id, imageUrl } = req.body;
 
   console.log('Received request to update entries for user ID:', id);
