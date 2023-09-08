@@ -9,7 +9,8 @@ const handleApiCall = (req, res) => {
     .predict('face-detection', req.body.input)
     .then((data) => {
       if (data && data.outputs && data.outputs.length > 0) {
-        imageHandler.handleApiCall(req, res, data);
+        // Pass the data to imageHandler
+        imageHandler(req, res, db, data);
       } else {
         console.error('Invalid or empty response from Clarifai API:', data);
         res.status(400).json('Unable to work with API');
