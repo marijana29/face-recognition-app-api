@@ -4,7 +4,7 @@ const app = new Clarifai.App({
   apiKey: process.env.API_CLARIFAI,
 });
 
-const handleApiCall = (req, res, db) => {
+const handleApiCall = (req, res) => {
   app.models
     .predict('face-detection', req.body.input)
     .then((data) => {
@@ -22,7 +22,7 @@ const handleApiCall = (req, res, db) => {
     });
 };
 
-const imageHandler = (req, res) => {
+const imageHandler = (req, res, db) => {
   const { id, imageUrl } = req.body;
 
   console.log('Received request to update entries for user ID:', id);
@@ -31,15 +31,14 @@ const imageHandler = (req, res) => {
     .where('id', '=', id)
     .increment('entries', 1)
     .returning('entries')
-    .then(entries => {
-      console.log('Updated entries:', entries[0].entries);
-      res.json(entries[0].entries);
+    .then((entries) => {
+      console.log('Updated entries:', entries[0]);
+      res.json(entries[0]);
     })
-    .catch(err => {
-      console.error('Error updating entries:', err); // Log the error for debugging
+    .catch((err) => {
+      console.error('Error updating entries:', err);
       res.status(400).json('Unable to update entries');
     });
-}
-
+};
 
 export default { imageHandler, handleApiCall };
