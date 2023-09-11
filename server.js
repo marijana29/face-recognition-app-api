@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
 import knex from 'knex';
-import fetch from 'node-fetch'; 
+
 
 import registerHandler from "./controllers/register.js";
 import signinHandler from "./controllers/signin.js";
