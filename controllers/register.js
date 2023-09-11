@@ -34,4 +34,4 @@ const registerHandler = (req, res, db) => {
   .catch(err => res.status(400).json('Unable to register'));
 };
 
-export default { registerHandler };
+export default registerHandler;
