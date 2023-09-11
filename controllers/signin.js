@@ -27,4 +27,4 @@ const signinHandler = (req, res, db) => {
     .catch(err => res.status(400).json('Wrong credentials'));
 };
 
-export default { signinHandler };
+export default signinHandler;
