@@ -1,34 +1,45 @@
-const Clarifai = require ('clarifai');
+import Clarifai from 'clarifai';
 
 const app = new Clarifai.App({
-  apiKey: '6399446788964a84813fa6a92d82ca0d'
+  apiKey: process.env.API_CLARIFAI,
 });
 
-const handleApiCall = (req, res) => {
+const handleApiCall = (req, res, db) => {
   app.models
-   .predict('face-detection', req.body.input)
-   .then(data => {
-    res.json(data)
-   })
-   .catch(err => res.status(400).json('unable to work with API'))
-}
+    .predict('face-detection', req.body.input)
+    .then((data) => {
+      if (data && data.outputs && data.outputs.length > 0) {
+        // Process the data as needed
+        res.json(data);
+      } else {
+        console.error('Invalid or empty response from Clarifai API:', data);
+        res.status(400).json('Unable to work with API');
+      }
+    })
+    .catch((err) => {
+      console.error('Error calling Clarifai API:', err);
+      res.status(400).json('Unable to work with API');
+    });
+};
 
-
-const handleImage = (req, res, db) => {
-  
+const imageHandler = (req, res) => {
   const { id, imageUrl } = req.body;
 
-  
-  db('users').where('id', '=', id)
-  .increment('entries', 1)
-  .returning('entries')
-  .then(entries => {
-    res.json(entries[0].entries);
-  })
-  .catch(err => res.status(400).json('unable to get entries'))
+  console.log('Received request to update entries for user ID:', id);
+
+  db('users')
+    .where('id', '=', id)
+    .increment('entries', 1)
+    .returning('entries')
+    .then(entries => {
+      console.log('Updated entries:', entries[0].entries);
+      res.json(entries[0].entries);
+    })
+    .catch(err => {
+      console.error('Error updating entries:', err); // Log the error for debugging
+      res.status(400).json('Unable to update entries');
+    });
 }
 
-module.exports = {
-  handleImage,
-  handleApiCall
-}
+
+export default { imageHandler, handleApiCall };
