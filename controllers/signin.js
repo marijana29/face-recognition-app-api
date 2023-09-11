@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt-nodejs';
 
-export const handleSignin = (req, res, db) => {
+const signinHandler = (req, res, db) => {
   const { email, password } = req.body;
-  
+
   if (!email || !password) {
     return res.status(400).json('Incorrect form submission');
   }
-  
+
   db.select('email', 'hash')
     .from('login')
     .where('email', '=', email)
@@ -26,3 +26,5 @@ export const handleSignin = (req, res, db) => {
     })
     .catch(err => res.status(400).json('Wrong credentials'));
 };
+
+export default { signinHandler };
