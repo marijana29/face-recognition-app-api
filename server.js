@@ -1,63 +1,41 @@
+import express from 'express';
+import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt-nodejs';
+import cors from 'cors';
+import knex from 'knex';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt-nodejs');
-const cors = require('cors');
-const knex = require('knex');
 
-const register = require('./controllers/register');
-const signin = require('./controllers/signin');
-const profile = require('./controllers/profile');
-const image = require('./controllers/image');
+import registerHandler from "./controllers/register.js";
+import signinHandler from "./controllers/signin.js";
+import profileHandler from "./controllers/profile.js";
+import imageHandler from "./controllers/image.js";
 
 const db = knex({
-  client: 'pg',
-  connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password : 'test',
-    database : 'smartbrain'
-  }
-});
-
-db.select('*').from('users').then(data => {
-  console.log(data);
+client: 'pg',
+connection: {
+connectionString : process.env.DATABASE_URL,
+ssl: { rejectUnauthorized: false },
+host: process.env.DATABASE_HOST,
+port: 5432,
+user: process.env.DATABASE_USER,
+password: process.env.DATABASE_PW,
+database: process.env.DATABASE_DB
+}
 });
 
 const app = express();
 
-app.use(bodyParser.json());
-const corsOptions = {
-  origin: 'http://localhost:3000', 
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use(cors());
+app.use(express.json());
 
+app.get('/', (req, res)=> { res.send(db.users) });
+app.post('/signin', (req, res) => { signinHandler(req, res, db, bcrypt) });
+app.post('/register', (req, res) => { registerHandler(req, res, db, bcrypt) });
+app.get('/profile/:id', (req, res) => { profileHandler(req, res, db) });
+app.put('/image', (req, res) => { imageHandler.handleApiCall(req, res, db) });
+app.post('/imageurl', (req, res) => { imageHandler.handleApiCall(req, res) });
 
-
-app.get('/', (req, res) => {
-  db.select('*').from('users')
-  .then(users => {
-  res.json(users);
-})
-  .catch(err => res.status(400).json('error getting users'));
-});
-app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt)});
-
-app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt)});
-
-app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db)});
-
-app.put('/image', (req, res) => { image.handleImage(req, res, db)});
-app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)});
- 
-
-
-
-
-
-
-app.listen(5000, () => {
-  console.log('app is running on port 5000');
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`app is running on port ${PORT}`);
 });
