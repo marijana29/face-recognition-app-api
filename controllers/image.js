@@ -5,8 +5,10 @@ const app = new Clarifai.App({
 });
 
 const handleApiCall = (req, res) => {
+  const { imageUrl } = req.body; // Retrieve imageUrl from the request body
+
   app.models
-    .predict('face-detection', req.body.input)
+    .predict('face-detection', { url: imageUrl }) // Use imageUrl from the request body
     .then((data) => {
       if (data && data.outputs && data.outputs.length > 0) {
         // Process the data as needed
@@ -23,7 +25,7 @@ const handleApiCall = (req, res) => {
 };
 
 const imageHandler = (req, res, db) => {
-  const { id, imageUrl } = req.body;
+  const { id } = req.body; // No need for imageUrl in this function
 
   console.log('Received request to update entries for user ID:', id);
 
