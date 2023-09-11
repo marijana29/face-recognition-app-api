@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "type": "module", // Added "type" field for ES6 modules
   "scripts": {
     "start": "nodemon server.js"
   },
